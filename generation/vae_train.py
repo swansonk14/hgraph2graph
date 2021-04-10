@@ -75,6 +75,7 @@ for epoch in range(args.load_epoch + 1, args.epoch):
     dataset = DataFolder(args.train, args.batch_size)
 
     for batch in dataset:
+        batch, smiles = batch[:-1], batch[-1]
         total_step += 1
         model.zero_grad()
         loss, kl_div, wacc, iacc, tacc, sacc = model(*batch, beta=beta)
