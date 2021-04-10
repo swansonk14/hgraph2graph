@@ -20,6 +20,7 @@ parser.add_argument('--vocab', required=True)
 parser.add_argument('--atom_vocab', default=common_atom_vocab)
 parser.add_argument('--save_dir', required=True)
 parser.add_argument('--load_epoch', type=int, default=-1)
+parser.add_argument('--include_smiles', action='store_true', default=False)
 
 parser.add_argument('--rnn_type', type=str, default='LSTM')
 parser.add_argument('--hidden_size', type=int, default=250)
@@ -75,7 +76,9 @@ for epoch in range(args.load_epoch + 1, args.epoch):
     dataset = DataFolder(args.train, args.batch_size)
 
     for batch in dataset:
-        batch, smiles = batch[:-1], batch[-1]
+        if args.include_smiles:
+            batch, smiles = batch[:-1], batch[-1]
+
         total_step += 1
         model.zero_grad()
         loss, kl_div, wacc, iacc, tacc, sacc = model(*batch, beta=beta)
